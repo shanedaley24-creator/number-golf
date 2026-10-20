@@ -1,0 +1,1612 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Number Golf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #eceaff;
+        --bg-deep: #ddd6ff;
+        --surface: #ffffff;
+        --surface-2: #f1efff;
+        --ink: #171233;
+        --ink-soft: #5a5490;
+        --line: #c9c2f5;
+        --grass-a: #7cba4b;
+        --grass-b: #6dab3f;
+        --grass-deep: #4c8a2a;
+        --fairway-a: #1f7a33;
+        --fairway-b: #186129;
+        --green: #00a86b;
+        --green-bright: #00c853;
+        --gold: #d97706;
+        --gold-soft: #fef3c7;
+        --red: #e11d63;
+        --chip-bg: #171233;
+        --chip-ink: #f5f3ff;
+        --neon-pink: #ff2d95;
+        --neon-cyan: #00b8d9;
+        --neon-violet: #7c3aed;
+        --neon-lime: #65a30d;
+        --neon-yellow: #d97706;
+        --glow-cyan: rgba(0, 184, 217, 0.45);
+        --glow-pink: rgba(255, 45, 149, 0.4);
+        --shadow: 0 12px 32px rgba(60, 30, 160, 0.22);
+        --btn-shadow: 0 4px 0 rgba(23, 18, 51, 0.85);
+        --marquee-glow: 0 0 6px rgba(255,255,255,0.9), 0 0 18px rgba(255,45,149,0.75), 0 0 42px rgba(255,45,149,0.5);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #06081a;
+          --bg-deep: #06081a;
+          --surface: #10142e;
+          --surface-2: #171c3d;
+          --ink: #eef0ff;
+          --ink-soft: #9aa3d8;
+          --line: #2c3468;
+          --grass-a: #174f27;
+          --grass-b: #12401f;
+          --grass-deep: #0b2f16;
+          --fairway-a: #17652c;
+          --fairway-b: #125224;
+          --green: #2bff9e;
+          --green-bright: #2bff9e;
+          --gold: #ffd23e;
+          --gold-soft: #33270a;
+          --red: #ff4d6d;
+          --chip-bg: #eef0ff;
+          --chip-ink: #10142e;
+          --neon-pink: #ff3d9a;
+          --neon-cyan: #2ee6ff;
+          --neon-violet: #9d6bff;
+          --neon-lime: #a6ff4d;
+          --neon-yellow: #ffe14d;
+          --glow-cyan: rgba(46, 230, 255, 0.5);
+          --glow-pink: rgba(255, 61, 154, 0.5);
+          --shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(124, 58, 237, 0.18);
+          --btn-shadow: 0 4px 0 rgba(0, 0, 0, 0.9);
+          --marquee-glow: 0 0 6px rgba(255,255,255,0.85), 0 0 20px rgba(255,61,154,0.9), 0 0 48px rgba(255,61,154,0.55);
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+        background:
+          radial-gradient(ellipse 110% 45% at 50% -6%, rgba(255, 252, 214, 0.5), transparent 65%),
+          radial-gradient(ellipse 130% 90% at 50% 115%, var(--grass-deep), transparent 70%),
+          repeating-linear-gradient(
+            90deg,
+            var(--grass-a) 0 72px,
+            var(--grass-b) 72px 144px
+          );
+        background-color: var(--grass-b);
+        color: var(--ink);
+        min-height: 100dvh;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .wrap {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 12px 14px 36px;
+      }
+
+      /* ---------- Logo banner (casual golf-game style) ---------- */
+      .marquee {
+        text-align: center;
+        margin: 2px 0 12px;
+        padding: 18px 12px 15px;
+        border-radius: 20px;
+        background:
+          radial-gradient(ellipse 65% 36% at 16% 92%, rgba(110, 190, 72, 0.9), transparent 70%),
+          radial-gradient(ellipse 62% 32% at 86% 94%, rgba(96, 168, 62, 0.9), transparent 70%),
+          linear-gradient(180deg, #43a3ea 0%, #74c2f4 32%, #a5dcfa 50%, #8fce5e 51%, #63b03e 72%, #43912f 100%);
+        border: 3px solid #ffffff;
+        box-shadow:
+          0 0 0 3px #14335c,
+          0 14px 28px rgba(10, 45, 20, 0.35),
+          inset 0 0 0 2px rgba(20, 51, 92, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+      .marquee::before {
+        content: "";
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(circle 26px at 85% 14%, #fff7c4 0%, rgba(255, 247, 196, 0) 72%),
+          radial-gradient(ellipse 74px 20px at 13% 15%, rgba(255, 255, 255, 0.95), transparent 70%),
+          radial-gradient(ellipse 56px 15px at 23% 9%, rgba(255, 255, 255, 0.8), transparent 70%),
+          radial-gradient(ellipse 62px 17px at 64% 8%, rgba(255, 255, 255, 0.75), transparent 70%);
+        pointer-events: none;
+      }
+      .marquee::after {
+        content: "";
+        position: absolute; left: 0; right: 0; bottom: 0; height: 47%;
+        background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 26px, rgba(0, 0, 0, 0.05) 26px 52px);
+        pointer-events: none;
+      }
+      .m-flag {
+        position: absolute; right: 12px; bottom: 9px;
+        width: 36px; height: auto; z-index: 1;
+        filter: drop-shadow(0 2px 2px rgba(10, 40, 15, 0.35));
+      }
+      @media (max-width: 380px) { .m-flag { display: none; } }
+      .marquee .m-title {
+        position: relative; z-index: 1;
+        font-weight: 800;
+        line-height: 0.98;
+      }
+      .marquee .w-num {
+        display: block;
+        font-size: clamp(33px, 9.5vw, 44px);
+        letter-spacing: 0.03em;
+        color: #ffffff;
+        text-shadow:
+          3px 0 0 #14335c, -3px 0 0 #14335c, 0 3px 0 #14335c, 0 -3px 0 #14335c,
+          2.2px 2.2px 0 #14335c, -2.2px 2.2px 0 #14335c, 2.2px -2.2px 0 #14335c, -2.2px -2.2px 0 #14335c,
+          0 6px 0 #0d2543, 0 12px 16px rgba(8, 32, 66, 0.45);
+      }
+      .marquee .w-golf {
+        display: block;
+        margin-top: 4px;
+        font-size: clamp(42px, 12.5vw, 58px);
+        letter-spacing: 0.02em;
+        color: #54c526;
+        text-shadow:
+          3.5px 0 0 #14335c, -3.5px 0 0 #14335c, 0 3.5px 0 #14335c, 0 -3.5px 0 #14335c,
+          2.5px 2.5px 0 #14335c, -2.5px 2.5px 0 #14335c, 2.5px -2.5px 0 #14335c, -2.5px -2.5px 0 #14335c,
+          0 7px 0 #0d2543, 0 14px 18px rgba(8, 32, 66, 0.45);
+      }
+      .marquee .lt {
+        display: inline-block;
+        transform: rotate(var(--r, 0deg)) translateY(var(--y, 0px));
+      }
+      .o-ball {
+        display: inline-block;
+        width: 0.8em; height: 0.8em;
+        margin: 0 0.03em;
+        border-radius: 50%;
+        vertical-align: -0.06em;
+        background: radial-gradient(circle at 33% 28%, #ffffff 0%, #eef2e6 40%, #ccd8c0 72%, #9db493 100%);
+        box-shadow:
+          0 0 0 3px #14335c,
+          inset -0.09em -0.11em 0.16em rgba(46, 68, 44, 0.4),
+          inset 0.05em 0.06em 0.1em rgba(255, 255, 255, 0.8),
+          0 7px 0 rgba(13, 37, 67, 0.9);
+        position: relative;
+      }
+      .o-ball::after {
+        content: "";
+        position: absolute; inset: 14%;
+        border-radius: 50%;
+        background-image:
+          radial-gradient(circle, rgba(255, 255, 255, 0.5) 1.4px, transparent 1.5px),
+          radial-gradient(circle, rgba(80, 100, 80, 0.5) 1.3px, transparent 1.4px);
+        background-size: 7px 7px, 7px 7px;
+        background-position: 1.6px 2px, 1px 1px;
+      }
+      .marquee .m-sub {
+        position: relative; z-index: 1;
+        display: inline-block;
+        margin-top: 13px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 0.28em; text-transform: uppercase;
+        color: #ffffff;
+        background: #14335c;
+        border: 2px solid #ffffff;
+        border-radius: 999px;
+        padding: 5px 14px 5px 17px;
+        box-shadow: 0 3px 0 rgba(13, 37, 67, 0.85), 0 6px 12px rgba(8, 32, 66, 0.35);
+      }
+
+      /* ---------- Ad slot ---------- */
+      .ad-slot {
+        position: relative;
+        margin: 0 0 14px;
+        border-radius: 14px;
+        background: #0b0f2b;
+        border: 1.5px solid var(--neon-violet);
+        box-shadow:
+          0 0 14px rgba(124, 58, 237, 0.4),
+          inset 0 0 16px rgba(124, 58, 237, 0.16);
+        overflow: hidden;
+      }
+      .ad-badge {
+        position: absolute;
+        top: 7px; left: 9px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.16em; text-transform: uppercase;
+        color: #0b0f2b;
+        background: var(--neon-yellow);
+        border-radius: 4px;
+        padding: 2px 5px;
+        z-index: 2;
+      }
+      .ad-close {
+        position: absolute;
+        top: 5px; right: 5px;
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(238, 240, 255, 0.5);
+        background: rgba(11, 15, 43, 0.75);
+        color: #eef0ff;
+        font-size: 15px; line-height: 1;
+        display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+      }
+      .ad-close:active { transform: scale(0.9); }
+      .ad-close:disabled { opacity: 0.45; cursor: default; font-size: 12px; font-family: "IBM Plex Mono", monospace; }
+      .ad-main {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 16px 38px 13px 14px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+        color: #eef0ff;
+      }
+      .ad-main:active { filter: brightness(1.3); }
+      .ad-main { transition: opacity 0.3s ease; }
+      .ad-main.fading { opacity: 0; }
+      .ad-logo {
+        flex: none;
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #ffd23e, #ff8a3d);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 12px rgba(255, 210, 62, 0.5);
+      }
+      .ad-logo svg { width: 30px; height: 30px; }
+      .ad-copy { min-width: 0; }
+      .ad-brand {
+        display: block;
+        font-size: 17px; font-weight: 800; letter-spacing: 0.05em;
+        color: #ffe9a8;
+        text-shadow: 0 0 10px rgba(255, 210, 62, 0.6);
+        text-transform: uppercase;
+      }
+      .ad-line { display: block; font-size: 13px; font-weight: 600; color: #c9cdf2; margin-top: 1px; }
+      .ad-cta {
+        flex: none;
+        margin-left: auto;
+        font-size: 11px; font-weight: 800;
+        letter-spacing: 0.1em; text-transform: uppercase;
+        color: #fff;
+        background: var(--neon-pink);
+        border-radius: 999px;
+        padding: 7px 12px;
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+        box-shadow: 0 0 12px var(--glow-pink), inset 0 0 8px rgba(255, 255, 255, 0.25);
+        white-space: nowrap;
+      }
+      @media (max-width: 380px) { .ad-cta { display: none; } }
+      .ad-hidden-note {
+        padding: 12px 14px;
+        font-size: 13px; font-weight: 600;
+        color: var(--ink-soft);
+        text-align: center;
+      }
+
+      /* ---------- Ad detail overlay ---------- */
+      .ad-overlay {
+        position: fixed; inset: 0;
+        background: rgba(4, 6, 24, 0.72);
+        display: flex; align-items: center; justify-content: center;
+        padding: 18px;
+        z-index: 50;
+      }
+      .ad-card {
+        width: 100%; max-width: 400px;
+        background: var(--surface);
+        border: 2px solid var(--neon-violet);
+        border-radius: 18px;
+        padding: 22px 20px 20px;
+        box-shadow: var(--shadow), 0 0 26px rgba(124, 58, 237, 0.5);
+        position: relative;
+        animation: rise 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        max-height: 86dvh;
+        overflow-y: auto;
+      }
+      .ad-card .ad-badge { position: static; display: inline-block; }
+      .ad-card h3 {
+        margin: 10px 0 2px;
+        font-size: 24px; font-weight: 800; letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+      .ad-card .tagline { font-size: 14px; font-weight: 600; color: var(--ink-soft); margin: 0 0 14px; }
+      .ad-menu { list-style: none; margin: 0 0 16px; padding: 0; }
+      .ad-menu li {
+        display: flex; justify-content: space-between; gap: 12px;
+        padding: 9px 2px;
+        border-bottom: 1px dashed var(--line);
+        font-size: 15px; font-weight: 600;
+      }
+      .ad-menu li:last-child { border-bottom: none; }
+      .ad-menu .price { font-family: "IBM Plex Mono", monospace; font-weight: 700; color: var(--neon-pink); }
+      .ad-order {
+        display: block;
+        text-align: center;
+        background: var(--neon-pink);
+        color: #fff;
+        font-size: 16px; font-weight: 800;
+        letter-spacing: 0.06em; text-transform: uppercase;
+        text-decoration: none;
+        padding: 13px 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 0 rgba(90, 5, 45, 0.8), 0 0 16px var(--glow-pink);
+      }
+      .ad-order:active { transform: translateY(2px); }
+      .ad-card-close {
+        position: absolute; top: 10px; right: 10px;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid var(--line);
+        background: var(--surface-2);
+        color: var(--ink);
+        font-size: 17px; line-height: 1;
+        display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer;
+      }
+      .ad-card-close:active { transform: scale(0.92); }
+
+      /* ---------- HUD ---------- */
+      .hud {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .hud .spacer { flex: 1; }
+      .chip {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+        background: var(--surface);
+        border: 1.5px solid var(--neon-cyan);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        box-shadow: 0 0 10px var(--glow-cyan), inset 0 0 8px var(--glow-cyan);
+      }
+      .chip b {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 15px;
+        letter-spacing: 0;
+      }
+      .chip.dark {
+        background: var(--chip-bg);
+        color: var(--chip-ink);
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 12px var(--glow-pink), inset 0 0 8px var(--glow-pink);
+      }
+      .chip .pos { color: var(--red); }
+      .chip .neg { color: var(--green-bright); }
+      .icon-btn {
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        border: 1.5px solid var(--neon-violet);
+        background: var(--surface);
+        color: var(--ink);
+        display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        flex: none;
+        box-shadow: 0 0 10px rgba(124, 58, 237, 0.45), inset 0 0 8px rgba(124, 58, 237, 0.3);
+      }
+      .icon-btn:active { transform: scale(0.94); }
+      .icon-btn svg { width: 19px; height: 19px; }
+
+      /* ---------- Mode picker ---------- */
+      .mode-bar {
+        display: flex;
+        gap: 8px;
+        margin: 0 0 12px;
+      }
+      .mode-btn {
+        flex: 1;
+        appearance: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 14px; font-weight: 800;
+        letter-spacing: 0.03em;
+        color: var(--ink-soft);
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: 12px;
+        padding: 8px 4px 7px;
+        min-width: 0;
+        box-shadow: 0 0 8px rgba(124, 58, 237, 0.18);
+      }
+      .mode-btn .sub {
+        display: block;
+        margin-top: 1px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px; font-weight: 600;
+        letter-spacing: 0.07em; text-transform: uppercase;
+        opacity: 0.75;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mode-btn:active { transform: scale(0.97); }
+      .mode-btn.active {
+        background: #0b0f2b;
+        color: #eef0ff;
+        border-color: var(--neon-pink);
+        box-shadow: 0 0 12px var(--glow-pink), inset 0 0 10px var(--glow-pink);
+      }
+      .mode-btn.active .sub { color: var(--gold); opacity: 1; }
+      .sunk.daily {
+        border-color: var(--gold);
+        box-shadow:
+          var(--shadow),
+          0 0 20px rgba(255, 210, 62, 0.35),
+          inset 0 0 20px rgba(255, 210, 62, 0.12);
+      }
+      .sunk.daily .verdict {
+        color: #fff3c4;
+        text-shadow: 0 0 10px rgba(255, 210, 62, 0.85), 0 0 32px rgba(255, 210, 62, 0.5);
+      }
+      table.scorecard tr.subtotal td {
+        background: var(--surface-2);
+        font-weight: 700;
+      }
+
+      /* ---------- Fairway panel ---------- */
+      .fairway {
+        margin-top: 12px;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow:
+          var(--shadow),
+          0 0 0 2px var(--neon-violet),
+          0 0 22px rgba(124, 58, 237, 0.5),
+          0 0 52px rgba(0, 184, 217, 0.18);
+      }
+      .fairway-inner {
+        background:
+          repeating-linear-gradient(
+            90deg,
+            var(--fairway-a) 0 56px,
+            var(--fairway-b) 56px 112px
+          );
+        padding: 16px 18px 18px;
+        color: #eef0ff;
+        position: relative;
+      }
+      .fairway-inner::before {
+        content: "";
+        position: absolute; inset: 0;
+        background:
+          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 28px),
+          radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 246, 190, 0.14), transparent 70%);
+        pointer-events: none;
+      }
+      .target-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        position: relative;
+      }
+      .target-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        opacity: 0.85;
+        display: flex; align-items: center; gap: 7px;
+      }
+      .target-label svg { width: 15px; height: 19px; flex: none; }
+      .target-num {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 44px;
+        font-weight: 700;
+        line-height: 1.05;
+        color: #fff6c9;
+        text-shadow: 0 0 8px rgba(255, 225, 77, 0.85), 0 0 26px rgba(255, 210, 62, 0.55);
+      }
+      .distance {
+        text-align: right;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        opacity: 0.9;
+      }
+      .distance b {
+        display: block;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 24px;
+        letter-spacing: 0;
+        margin-top: 2px;
+      }
+      .current-block {
+        margin-top: 14px;
+        background: rgba(4, 34, 14, 0.55);
+        border: 1.5px solid var(--neon-cyan);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 0 14px var(--glow-cyan), inset 0 0 16px rgba(46, 230, 255, 0.12);
+        position: relative;
+      }
+      .ball {
+        width: 76px; height: 76px; flex: none;
+        border-radius: 50%;
+        position: relative;
+        background: radial-gradient(circle at 32% 27%, #ffffff 0%, #f0f3e9 38%, #d3dcc8 68%, #a7bba0 90%, #8ba184 100%);
+        box-shadow:
+          inset -13px -16px 22px rgba(43, 64, 42, 0.42),
+          inset 8px 10px 14px rgba(255, 255, 255, 0.7),
+          0 18px 14px -8px rgba(3, 30, 10, 0.55),
+          0 4px 7px rgba(3, 30, 10, 0.3);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .ball::before {
+        content: "";
+        position: absolute; left: 13%; top: 7%;
+        width: 42%; height: 28%;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 68%);
+        transform: rotate(-16deg);
+        z-index: 1;
+        pointer-events: none;
+      }
+      .ball::after {
+        content: "";
+        position: absolute; inset: 8px;
+        border-radius: 50%;
+        background-image:
+          radial-gradient(circle, rgba(255, 255, 255, 0.55) 2.6px, transparent 2.7px),
+          radial-gradient(circle, rgba(74, 96, 74, 0.55) 2.5px, transparent 2.6px);
+        background-size: 13px 13px, 13px 13px;
+        background-position: 4px 5px, 3px 3px;
+      }
+      .ball.hop { animation: hop 0.45s cubic-bezier(0.28, 0.84, 0.42, 1); }
+      @keyframes hop {
+        0% { transform: translateY(0) scale(1, 1); }
+        35% { transform: translateY(-16px) scale(0.96, 1.05); }
+        70% { transform: translateY(0) scale(1.08, 0.9); }
+        100% { transform: translateY(0) scale(1, 1); }
+      }
+      /* ---------- Golfer character ---------- */
+      .golfer { flex: none; width: 46px; align-self: flex-end; margin-bottom: -4px; }
+      .golfer svg { display: block; width: 100%; height: auto; overflow: visible; }
+      .golfer .swing-arm { transform-box: view-box; transform-origin: 43px 27px; }
+      .golfer .impact { opacity: 0; transform-box: view-box; transform-origin: 72px 76px; }
+      .golfer.go svg { animation: golferdip 0.6s ease; }
+      .golfer.go .swing-arm { animation: swingarm 0.6s cubic-bezier(0.3, 0.6, 0.4, 1); }
+      .golfer.go .impact { animation: impactpop 0.6s ease-out; }
+      @keyframes swingarm {
+        0% { transform: rotate(0deg); }
+        28% { transform: rotate(-78deg); }
+        48% { transform: rotate(10deg); }
+        68% { transform: rotate(56deg); }
+        100% { transform: rotate(0deg); }
+      }
+      @keyframes impactpop {
+        0%, 42% { opacity: 0; transform: scale(0.5); }
+        50% { opacity: 1; transform: scale(1.15); }
+        66%, 100% { opacity: 0; transform: scale(1.35); }
+      }
+      @keyframes golferdip {
+        0%, 100% { transform: translateY(0); }
+        30% { transform: translateY(1.5px); }
+        55% { transform: translateY(-1px); }
+      }
+      .current-label {
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        opacity: 0.85;
+      }
+      .current-num {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: clamp(40px, 12vw, 58px); font-weight: 700; line-height: 1;
+        color: #d8fbff;
+        text-shadow: 0 0 8px rgba(46, 230, 255, 0.9), 0 0 28px rgba(46, 230, 255, 0.5);
+      }
+      .current-num.pop { animation: numpop 0.25s ease; }
+      @keyframes numpop { 0% { transform: scale(1.14); } 100% { transform: scale(1); } }
+      .strokes-box {
+        margin-left: auto; text-align: right; flex: none;
+      }
+      .strokes-box .n {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 30px; font-weight: 700; line-height: 1;
+      }
+      .strokes-box .l {
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85;
+      }
+
+      /* ---------- Trail ---------- */
+      .trail {
+        margin-top: 12px;
+        display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+        min-height: 34px;
+      }
+      .trail .tval {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 700; font-size: 15px;
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: 9px;
+        padding: 4px 9px;
+      }
+      .trail .tval.start { background: var(--surface-2); }
+      .trail .tval.now {
+        border-color: var(--neon-cyan); color: var(--neon-cyan);
+        box-shadow: 0 0 10px var(--glow-cyan);
+      }
+      .trail .top {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 13px; font-weight: 600;
+        color: var(--gold);
+      }
+      .trail .empty {
+        color: var(--ink-soft); font-size: 14px; font-weight: 500;
+      }
+
+      /* ---------- Clubs ---------- */
+      .clubs-head {
+        margin: 14px 2px 8px;
+        display: flex; align-items: baseline; justify-content: space-between;
+      }
+      .clubs-head h2 {
+        margin: 0; font-size: 15px; font-weight: 800;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--neon-violet);
+        text-shadow: 0 0 12px rgba(124, 58, 237, 0.45);
+      }
+      .clubs-head span { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
+      .clubs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .club {
+        --club-neon: var(--neon-cyan);
+        --club-glow: var(--glow-cyan);
+        appearance: none;
+        border: 2px solid var(--club-neon);
+        background: #0b0f2b;
+        color: #eef0ff;
+        border-radius: 14px;
+        padding: 12px 6px 10px;
+        cursor: pointer;
+        text-align: center;
+        min-width: 0;
+        box-shadow:
+          0 4px 0 rgba(0, 0, 0, 0.85),
+          0 0 14px var(--club-glow),
+          inset 0 0 14px var(--club-glow);
+        transition: transform 0.06s ease, box-shadow 0.06s ease, opacity 0.15s, filter 0.15s;
+        font-family: inherit;
+      }
+      .club.op-add { --club-neon: var(--neon-cyan); --club-glow: var(--glow-cyan); }
+      .club.op-sub { --club-neon: var(--neon-pink); --club-glow: var(--glow-pink); }
+      .club.op-mul { --club-neon: var(--neon-violet); --club-glow: rgba(124, 58, 237, 0.5); }
+      .club.op-div { --club-neon: var(--neon-yellow); --club-glow: rgba(255, 210, 62, 0.45); }
+      .club:hover:not(:disabled) { filter: brightness(1.25); }
+      .club:active:not(:disabled) {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0 rgba(0,0,0,0.85), 0 0 22px var(--club-glow), inset 0 0 18px var(--club-glow);
+      }
+      .club:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; filter: saturate(0.3); }
+      .club .op {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 26px; font-weight: 700; line-height: 1;
+        display: block;
+        color: var(--club-neon);
+        text-shadow: 0 0 10px var(--club-glow), 0 0 24px var(--club-glow);
+      }
+      .club .preview {
+        display: block; margin-top: 6px;
+        font-size: 11.5px; font-weight: 600; color: #9aa3d8;
+        font-family: "IBM Plex Mono", monospace;
+        white-space: nowrap;
+      }
+      @media (max-width: 380px) {
+        .club .op { font-size: 22px; }
+        .club .preview { font-size: 10px; }
+        .clubs { gap: 6px; }
+      }
+      .club .preview b { color: #fff; font-weight: 700; text-shadow: 0 0 8px var(--club-glow); }
+      .club.hint-flash {
+        border-color: var(--gold);
+        background: #2b2003;
+        box-shadow:
+          0 4px 0 rgba(0, 0, 0, 0.85),
+          0 0 26px rgba(255, 210, 62, 0.75),
+          inset 0 0 18px rgba(255, 210, 62, 0.35);
+        animation: hintpulse 0.5s ease 3;
+      }
+      @keyframes hintpulse { 50% { transform: scale(1.045); } }
+
+      /* ---------- Controls ---------- */
+      .controls {
+        margin-top: 12px;
+        display: flex; gap: 10px;
+      }
+      .ctl {
+        flex: 1;
+        appearance: none;
+        border: 1.5px solid var(--neon-violet);
+        background: var(--surface);
+        color: var(--ink);
+        border-radius: 12px;
+        padding: 12px 6px;
+        font-family: inherit;
+        font-size: 14px; font-weight: 700;
+        cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+        box-shadow: 0 0 9px rgba(124, 58, 237, 0.35), inset 0 0 7px rgba(124, 58, 237, 0.18);
+      }
+      .ctl svg { width: 16px; height: 16px; flex: none; }
+      .ctl:active { transform: scale(0.97); }
+      .ctl:disabled { opacity: 0.35; cursor: not-allowed; }
+      .ctl.caddie {
+        border-color: var(--gold); color: var(--gold);
+        box-shadow: 0 0 9px rgba(255, 210, 62, 0.4), inset 0 0 7px rgba(255, 210, 62, 0.2);
+      }
+
+      /* ---------- Hole complete ---------- */
+      .sunk {
+        margin-top: 18px;
+        background: #0b0f2b;
+        border: 2px solid var(--green);
+        border-radius: 18px;
+        padding: 20px;
+        text-align: center;
+        color: #eef0ff;
+        box-shadow:
+          var(--shadow),
+          0 0 20px rgba(43, 255, 158, 0.35),
+          inset 0 0 20px rgba(43, 255, 158, 0.12);
+        animation: rise 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+      }
+      .sunk .detail { color: #9aa3d8 !important; }
+      .sunk .detail b { color: #fff !important; }
+      @keyframes rise { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+      .sunk .verdict {
+        font-size: 34px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.1;
+        color: #d9ffef;
+        text-shadow: 0 0 10px rgba(43, 255, 158, 0.85), 0 0 32px rgba(43, 255, 158, 0.5);
+      }
+      .sunk .detail {
+        margin-top: 6px; color: var(--ink-soft); font-size: 15px; font-weight: 600;
+      }
+      .sunk .detail b { color: var(--ink); font-family: "IBM Plex Mono", monospace; }
+      .big-btn {
+        margin-top: 16px;
+        appearance: none; cursor: pointer;
+        background: var(--neon-pink);
+        border: 2px solid #ff8ac2;
+        color: #fff;
+        font-family: inherit;
+        font-size: 17px; font-weight: 800;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        padding: 15px 30px;
+        border-radius: 14px;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        box-shadow:
+          0 5px 0 rgba(90, 5, 45, 0.8),
+          0 0 20px var(--glow-pink),
+          inset 0 0 14px rgba(255, 255, 255, 0.22);
+        width: 100%;
+      }
+      .big-btn:active {
+        transform: translateY(3px);
+        box-shadow: 0 2px 0 rgba(90,5,45,0.8), 0 0 28px var(--glow-pink), inset 0 0 14px rgba(255,255,255,0.22);
+      }
+
+      /* ---------- Scorecard ---------- */
+      .card-title {
+        font-size: 30px; font-weight: 800; margin: 10px 0 2px; letter-spacing: 0.01em;
+        color: var(--neon-pink);
+        text-shadow: 0 0 14px var(--glow-pink);
+      }
+      .card-sub { color: var(--ink-soft); font-weight: 600; font-size: 15px; margin: 0 0 16px; }
+      .total-banner {
+        background: #0b0f2b; color: #eef0ff;
+        border: 2px solid var(--neon-cyan);
+        border-radius: 16px; padding: 16px 20px;
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 16px;
+        box-shadow: 0 0 18px var(--glow-cyan), inset 0 0 16px rgba(46, 230, 255, 0.1);
+      }
+      .total-banner .score {
+        color: #d8fbff;
+        text-shadow: 0 0 10px rgba(46, 230, 255, 0.9), 0 0 30px rgba(46, 230, 255, 0.5);
+      }
+      .total-banner .l { font-size: 12px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; opacity: 0.8; }
+      .total-banner .score { font-family: "IBM Plex Mono", monospace; font-size: 34px; font-weight: 700; line-height: 1; }
+      .total-banner .name { font-size: 18px; font-weight: 800; }
+      table.scorecard {
+        width: 100%; border-collapse: collapse;
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: 14px; overflow: hidden;
+        font-size: 14px;
+      }
+      table.scorecard th, table.scorecard td {
+        padding: 9px 10px; text-align: center;
+        border-bottom: 1px solid var(--line);
+      }
+      table.scorecard tr:last-child td { border-bottom: none; }
+      table.scorecard th {
+        font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+        color: var(--ink-soft); background: var(--surface-2); font-weight: 700;
+      }
+      table.scorecard td:first-child, table.scorecard th:first-child { text-align: left; font-weight: 700; }
+      table.scorecard td { font-family: "IBM Plex Mono", monospace; font-weight: 600; }
+      table.scorecard td:first-child { font-family: inherit; }
+      .diff-neg { color: var(--green); font-weight: 700; }
+      .diff-pos { color: var(--red); font-weight: 700; }
+      .howto {
+        margin-top: 22px;
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 14px; line-height: 1.55; color: var(--ink-soft);
+      }
+      .howto b { color: var(--ink); }
+      .hidden { display: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        .ball.hop, .current-num.pop, .sunk, .club.hint-flash, .ad-card,
+        .marquee .m-title,
+        .golfer.go svg, .golfer.go .swing-arm, .golfer.go .impact { animation: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ============ GAME SCREEN ============ -->
+      <section id="gameScreen">
+        <div class="marquee" aria-hidden="true">
+          <svg class="m-flag" viewBox="0 0 48 76">
+            <ellipse cx="39" cy="71" rx="9" ry="3" fill="rgba(10, 40, 20, 0.4)" />
+            <ellipse cx="39" cy="70.4" rx="5.5" ry="1.9" fill="#0e3312" />
+            <rect x="37.6" y="8" width="2.8" height="62" rx="1.4" fill="#eef2f6" />
+            <path d="M40.4 8 Q29 11 18 14 Q29 17.5 40.4 21 Z" fill="#e63329" />
+          </svg>
+          <div class="m-title">
+            <span class="w-num"><span class="lt" style="--r:-2.5deg">N</span><span class="lt" style="--r:1.5deg;--y:1px">U</span><span class="lt" style="--r:-1deg">M</span><span class="lt" style="--r:2deg;--y:1px">B</span><span class="lt" style="--r:-2deg">E</span><span class="lt" style="--r:1.5deg">R</span></span>
+            <span class="w-golf"><span class="lt" style="--r:-2deg">G</span><span class="o-ball"></span><span class="lt" style="--r:2deg;--y:1px">L</span><span class="lt" style="--r:-1.5deg">F</span></span>
+          </div>
+          <div class="m-sub">★ Insert coin · Beat par ★</div>
+        </div>
+
+        <div class="ad-slot" id="adSlot">
+          <span class="ad-badge">Ad</span>
+          <button class="ad-close" id="adClose" aria-label="Dismiss ad">×</button>
+          <button class="ad-main" id="adMain">
+            <span class="ad-logo" id="adLogo" aria-hidden="true"></span>
+            <span class="ad-copy">
+              <span class="ad-brand" id="adBrand"></span>
+              <span class="ad-line" id="adLine"></span>
+            </span>
+            <span class="ad-cta" id="adCta">Menu</span>
+          </button>
+          <div class="ad-hidden-note hidden" id="adHiddenNote">Ad dismissed — it will be back next visit.</div>
+        </div>
+
+        <div class="ad-overlay hidden" id="adOverlay" role="dialog" aria-modal="true" aria-label="Advertisement details">
+          <div class="ad-card">
+            <button class="ad-card-close" id="adCardClose" aria-label="Close advertisement">×</button>
+            <span class="ad-badge">Ad</span>
+            <h3 id="adCardTitle"></h3>
+            <p class="tagline" id="adCardTagline"></p>
+            <ul class="ad-menu" id="adMenu"></ul>
+            <a class="ad-order" id="adOrder" href="#">Order</a>
+          </div>
+        </div>
+        <div class="mode-bar" role="group" aria-label="Choose round mode">
+          <button class="mode-btn" id="mode9">9 holes<span class="sub">Quick round</span></button>
+          <button class="mode-btn" id="mode18">18 holes<span class="sub">Full round</span></button>
+          <button class="mode-btn" id="modeDaily">Daily course<span class="sub" id="dailySub">Today</span></button>
+        </div>
+
+        <div class="hud">
+          <span class="chip dark">Hole <b id="hudHole">1 / 9</b></span>
+          <span class="chip">Par <b id="hudPar">3</b></span>
+          <span class="chip">Score <b id="hudScore">E</b></span>
+          <span class="spacer"></span>
+          <button class="icon-btn" id="soundBtn" aria-label="Toggle sound">
+            <svg id="soundOnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9.4 9.4 0 0 1 0 13"/></svg>
+            <svg id="soundOffIcon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z" fill="currentColor" stroke="none"/><line x1="16" y1="9" x2="22" y2="15"/><line x1="22" y1="9" x2="16" y2="15"/></svg>
+          </button>
+        </div>
+
+        <div class="fairway">
+          <div class="fairway-inner">
+            <div class="target-row">
+              <div>
+                <div class="target-label">
+                  <svg viewBox="0 0 20 26" fill="none"><path d="M3 25 V2" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M3 2 L17 6 L3 11 Z" fill="#e8b93c"/></svg>
+                  Target
+                </div>
+                <div class="target-num" id="targetNum">48</div>
+              </div>
+              <div class="distance">
+                Away
+                <b id="distanceNum">0</b>
+              </div>
+            </div>
+            <div class="current-block">
+              <div class="golfer" id="golfer" aria-hidden="true">
+                <svg viewBox="0 0 76 92">
+                  <ellipse cx="38" cy="88" rx="24" ry="3.5" fill="rgba(0,0,0,0.18)" />
+                  <path d="M37 55 L29 84" stroke="#2c3e50" stroke-width="7" stroke-linecap="round" fill="none" />
+                  <path d="M41 55 L49 84" stroke="#2c3e50" stroke-width="7" stroke-linecap="round" fill="none" />
+                  <ellipse cx="27" cy="86" rx="6" ry="3" fill="#f4f7f2" />
+                  <ellipse cx="51" cy="86" rx="6" ry="3" fill="#f4f7f2" />
+                  <path d="M32 24 Q39 19 46 24 L45 56 Q39 59 33 56 Z" fill="#e8b93c" />
+                  <circle cx="39" cy="13" r="8" fill="#eab892" />
+                  <path d="M30.5 12.5 A8.5 8.5 0 0 1 47.5 12.5 Z" fill="#1e6b38" />
+                  <rect x="46" y="11" width="9" height="3.2" rx="1.6" fill="#1e6b38" />
+                  <g class="swing-arm">
+                    <path d="M43 27 L51 42" stroke="#e8b93c" stroke-width="7" stroke-linecap="round" fill="none" />
+                    <path d="M47 35 L51 42" stroke="#eab892" stroke-width="6" stroke-linecap="round" fill="none" />
+                    <line x1="51" y1="42" x2="65" y2="82" stroke="#cfd8dc" stroke-width="3" stroke-linecap="round" />
+                    <path d="M60 82 q5-3 11 0 l0 4 q-6 2-11-1 Z" fill="#8d9aa3" />
+                  </g>
+                  <g class="impact" stroke="#ffe9a8" stroke-width="2.4" stroke-linecap="round" fill="none">
+                    <path d="M72 70 v-6" />
+                    <path d="M80 74 l5-4" />
+                    <path d="M64 74 l-5-4" />
+                  </g>
+                </svg>
+              </div>
+              <div class="ball" id="ball"></div>
+              <div>
+                <div class="current-label">Your ball</div>
+                <div class="current-num" id="currentNum">7</div>
+              </div>
+              <div class="strokes-box">
+                <div class="n" id="strokeNum">0</div>
+                <div class="l">Strokes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trail" id="trail"></div>
+
+        <div id="playArea">
+          <div class="clubs-head">
+            <h2>Club bag</h2>
+            <span>each swing = 1 stroke</span>
+          </div>
+          <div class="clubs" id="clubs"></div>
+          <div class="controls">
+            <button class="ctl" id="undoBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
+              Undo
+            </button>
+            <button class="ctl caddie" id="hintBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              Caddie tip
+            </button>
+            <button class="ctl" id="resetBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+              Restart
+            </button>
+          </div>
+        </div>
+
+        <div class="sunk hidden" id="sunkPanel">
+          <div class="verdict" id="sunkVerdict">Birdie!</div>
+          <div class="detail" id="sunkDetail"></div>
+          <button class="big-btn" id="nextBtn">Next hole</button>
+        </div>
+
+        <div class="sunk daily hidden" id="dailyDonePanel">
+          <div class="verdict">Daily's in the books</div>
+          <div class="detail" id="dailyDoneDetail"></div>
+          <button class="big-btn" id="dailyCasualBtn">Play a casual 9 holes</button>
+        </div>
+
+        <div class="howto">
+          <b>How to play:</b> Your ball sits on a number. Pick a club to swing it —
+          every operation moves the number. Land <b>exactly</b> on the target to sink the putt.
+          Fewer strokes than par is under par, just like golf. Stuck? The caddie knows a way —
+          his tip costs nothing but pride. Play a quick 9 or a full 18 up top — or take your one
+          scored shot at the <b>Daily course</b>: the same course for everyone, fresh every day,
+          with a streak for showing up.
+        </div>
+      </section>
+
+      <!-- ============ SCORECARD SCREEN ============ -->
+      <section id="cardScreen" class="hidden">
+        <h1 class="card-title" id="cardTitle">Round complete</h1>
+        <p class="card-sub" id="cardSub">Nine holes in the books.</p>
+        <div class="total-banner">
+          <div>
+            <div class="l">Total score</div>
+            <div class="name" id="totalName">Even par</div>
+          </div>
+          <div class="score" id="totalScore">E</div>
+        </div>
+        <table class="scorecard">
+          <thead>
+            <tr><th>Hole</th><th>Par</th><th>Strokes</th><th>+/-</th></tr>
+          </thead>
+          <tbody id="cardBody"></tbody>
+        </table>
+        <button class="big-btn" id="againBtn">Play another round</button>
+      </section>
+
+    </div>
+
+    <script>
+      "use strict";
+
+      /* ================= Audio (tiny WebAudio blips) ================= */
+      let audioCtx = null;
+      let soundOn = true;
+      function beep(freq, dur, type, gainVal, when) {
+        if (!soundOn) return;
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === "suspended") audioCtx.resume();
+          const t = audioCtx.currentTime + (when || 0);
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = type || "sine";
+          osc.frequency.setValueAtTime(freq, t);
+          g.gain.setValueAtTime(gainVal || 0.08, t);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          osc.connect(g); g.connect(audioCtx.destination);
+          osc.start(t); osc.stop(t + dur);
+        } catch (e) { /* audio unavailable — play silently */ }
+      }
+      const sndSwing = () => { beep(340, 0.09, "triangle", 0.07); beep(520, 0.07, "sine", 0.05, 0.03); };
+      const sndSink = () => { beep(523, 0.12, "sine", 0.08); beep(659, 0.12, "sine", 0.08, 0.1); beep(784, 0.22, "sine", 0.09, 0.2); };
+      const sndUndo = () => beep(240, 0.08, "sine", 0.05);
+
+      /* ================= Operations ================= */
+      // op: { label, sym, apply(n) -> new value or null if illegal }
+      function makeOps() {
+        const pool = [];
+        [2, 3, 4, 5, 6, 7, 8, 9].forEach(a => pool.push({ kind: "add", v: a, label: "+" + a, apply: n => n + a }));
+        [2, 3, 4, 5, 6, 7, 8, 9].forEach(a => pool.push({ kind: "sub", v: a, label: "−" + a, apply: n => n - a }));
+        [2, 3].forEach(a => pool.push({ kind: "mul", v: a, label: "×" + a, apply: n => n * a }));
+        [2, 3].forEach(a => pool.push({ kind: "div", v: a, label: "÷" + a, apply: n => (n % a === 0 ? n / a : null) }));
+        return pool;
+      }
+      const ALL_OPS = makeOps();
+      const MAXV = 500, MINV = 1;
+
+      function legal(op, n) {
+        const r = op.apply(n);
+        return (r !== null && r >= MINV && r <= MAXV && r !== n) ? r : null;
+      }
+
+      // Shortest path (BFS) from `from` to `to` using ops; returns array of ops or null.
+      function solve(from, to, ops, maxDepth) {
+        if (from === to) return [];
+        const visited = new Map([[from, null]]); // value -> {prev, op}
+        let frontier = [from];
+        for (let d = 0; d < (maxDepth || 8); d++) {
+          const next = [];
+          for (const val of frontier) {
+            for (const op of ops) {
+              const r = legal(op, val);
+              if (r === null || visited.has(r)) continue;
+              visited.set(r, { prev: val, op });
+              if (r === to) {
+                const path = [];
+                let cur = to;
+                while (visited.get(cur)) { path.unshift(visited.get(cur).op); cur = visited.get(cur).prev; }
+                return path;
+              }
+              next.push(r);
+            }
+          }
+          frontier = next;
+          if (!frontier.length) return null;
+        }
+        return null;
+      }
+
+      /* ================= Hole generation ================= */
+      const PARS = [2, 2, 3, 3, 3, 4, 4, 4, 5, 3, 2, 4, 3, 5, 4, 3, 4, 5];
+      // Swappable RNG: Math.random normally, a seeded PRNG for the daily course
+      // so everyone who plays on the same date gets the identical course.
+      let rand = Math.random;
+      function mulberry32(a) {
+        return function () {
+          a |= 0; a = a + 0x6D2B79F5 | 0;
+          let t = Math.imul(a ^ a >>> 15, 1 | a);
+          t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+          return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+      }
+      function hashStr(s) {
+        let h = 2166136261;
+        for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+        return h >>> 0;
+      }
+      function randInt(lo, hi) { return lo + Math.floor(rand() * (hi - lo + 1)); }
+      function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+      function pickOps(holeIdx) {
+        const adds = shuffle(ALL_OPS.filter(o => o.kind === "add")).slice(0, 1);
+        const subs = shuffle(ALL_OPS.filter(o => o.kind === "sub")).slice(0, 1);
+        const muls = shuffle(ALL_OPS.filter(o => o.kind === "mul"));
+        const divs = shuffle(ALL_OPS.filter(o => o.kind === "div"));
+        const rest = shuffle(ALL_OPS.filter(o => o.kind === "add" || o.kind === "sub"));
+        let ops;
+        if (holeIdx < 2) {
+          ops = [adds[0], subs[0], muls[0], rest[0]];           // early holes: gentle mix
+        } else if (holeIdx < 6) {
+          ops = [adds[0], subs[0], muls[0], rand() < 0.5 ? divs[0] : rest[0]];
+        } else {
+          ops = [adds[0], muls[0], divs[0], rand() < 0.5 ? subs[0] : muls[1]];
+        }
+        // dedupe by label
+        const seen = new Set(); const out = [];
+        for (const o of ops) { if (o && !seen.has(o.label)) { seen.add(o.label); out.push(o); } }
+        while (out.length < 4) { const c = ALL_OPS[randInt(0, ALL_OPS.length - 1)]; if (!seen.has(c.label)) { seen.add(c.label); out.push(c); } }
+        return out;
+      }
+
+      function genHole(holeIdx) {
+        const par = PARS[holeIdx];
+        for (let attempt = 0; attempt < 400; attempt++) {
+          const ops = pickOps(holeIdx);
+          const start = holeIdx < 3 ? randInt(3, 25) : randInt(4, 60);
+          // build a random forward path of length `par`
+          let val = start; const path = [];
+          let ok = true;
+          for (let i = 0; i < par; i++) {
+            const options = ops.filter(o => legal(o, val) !== null);
+            if (!options.length) { ok = false; break; }
+            const op = options[randInt(0, options.length - 1)];
+            val = legal(op, val); path.push(op);
+          }
+          if (!ok || val === start) continue;
+          const target = val;
+          const shortest = solve(start, target, ops, par + 2);
+          if (!shortest) continue;
+          // Keep it honest: the shortest route shouldn't trivialize the hole.
+          if (shortest.length < Math.max(2, par - 1)) continue;
+          if (Math.abs(target - start) < 3) continue;
+          return { start, target, par, ops, solution: path };
+        }
+        // Fallback (extremely unlikely): a simple constructed hole.
+        const ops = pickOps(holeIdx);
+        return { start: 6, target: 6 + par * 3, par, ops, solution: [] };
+      }
+
+      /* ================= Game state ================= */
+      let holes = [];
+      let holeIdx = 0;
+      let current = 0;
+      let strokes = 0;
+      let history = [];       // values visited, history[0] = start
+      let moves = [];         // ops used
+      let results = [];       // {par, strokes} per finished hole
+      let holeDone = false;
+      let mode = "9";          // "9" | "18" | "daily"
+      let dailyRec = null;     // today's saved daily result, once scored
+
+      const $ = id => document.getElementById(id);
+      const els = {
+        hudHole: $("hudHole"), hudPar: $("hudPar"), hudScore: $("hudScore"),
+        targetNum: $("targetNum"), distanceNum: $("distanceNum"),
+        currentNum: $("currentNum"), strokeNum: $("strokeNum"),
+        ball: $("ball"), golfer: $("golfer"), trail: $("trail"), clubs: $("clubs"),
+        undoBtn: $("undoBtn"), hintBtn: $("hintBtn"), resetBtn: $("resetBtn"),
+        playArea: $("playArea"), sunkPanel: $("sunkPanel"),
+        sunkVerdict: $("sunkVerdict"), sunkDetail: $("sunkDetail"), nextBtn: $("nextBtn"),
+        gameScreen: $("gameScreen"), cardScreen: $("cardScreen"),
+        cardBody: $("cardBody"), totalScore: $("totalScore"), totalName: $("totalName"),
+        cardSub: $("cardSub"), againBtn: $("againBtn"),
+        soundBtn: $("soundBtn"), soundOnIcon: $("soundOnIcon"), soundOffIcon: $("soundOffIcon"),
+        mode9: $("mode9"), mode18: $("mode18"), modeDaily: $("modeDaily"), dailySub: $("dailySub"),
+        dailyDonePanel: $("dailyDonePanel"), dailyDoneDetail: $("dailyDoneDetail"),
+        dailyCasualBtn: $("dailyCasualBtn"), cardTitle: $("cardTitle")
+      };
+
+      function fmtDiff(d) { return d === 0 ? "E" : (d > 0 ? "+" + d : "" + d); }
+      function totalDiff() { return results.reduce((s, r) => s + (r.strokes - r.par), 0); }
+      function scoreName(diff) {
+        if (diff <= -3) return "Albatross!";
+        if (diff === -2) return "Eagle!";
+        if (diff === -1) return "Birdie!";
+        if (diff === 0) return "Par";
+        if (diff === 1) return "Bogey";
+        if (diff === 2) return "Double bogey";
+        if (diff === 3) return "Triple bogey";
+        return "+" + diff;
+      }
+
+      function render() {
+        const hole = holes[holeIdx];
+        els.hudHole.textContent = (holeIdx + 1) + " / " + holes.length;
+        els.hudPar.textContent = hole.par;
+        const td = totalDiff() + (holeDone ? 0 : 0);
+        els.hudScore.textContent = results.length ? fmtDiff(td) : "E";
+        els.targetNum.textContent = hole.target;
+        els.currentNum.textContent = current;
+        els.strokeNum.textContent = strokes;
+        els.distanceNum.textContent = Math.abs(current - hole.target);
+
+        // trail
+        let html = "";
+        history.forEach((v, i) => {
+          if (i > 0) html += '<span class="top">' + moves[i - 1].label + " →</span>";
+          const cls = i === 0 ? "tval start" : (i === history.length - 1 ? "tval now" : "tval");
+          html += '<span class="' + cls + '">' + v + "</span>";
+        });
+        els.trail.innerHTML = html || '<span class="empty">On the tee — pick a club to swing.</span>';
+
+        // clubs
+        els.clubs.innerHTML = "";
+        hole.ops.forEach(op => {
+          const r = legal(op, current);
+          const btn = document.createElement("button");
+          btn.className = "club op-" + op.kind;
+          btn.dataset.label = op.label;
+          if (r === null || holeDone) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="op">' + op.label + '</span><span class="preview">can\'t play</span>';
+          } else {
+            btn.innerHTML = '<span class="op">' + op.label + '</span><span class="preview">' + current + " → <b>" + r + "</b></span>";
+            btn.addEventListener("click", () => swing(op));
+          }
+          els.clubs.appendChild(btn);
+        });
+
+        els.undoBtn.disabled = moves.length === 0 || holeDone;
+        els.hintBtn.disabled = holeDone;
+        els.resetBtn.disabled = holeDone || moves.length === 0;
+      }
+
+      function swing(op) {
+        const hole = holes[holeIdx];
+        const r = legal(op, current);
+        if (r === null) return;
+        current = r;
+        strokes++;
+        moves.push(op);
+        history.push(r);
+        sndSwing();
+        els.golfer.classList.remove("go"); void els.golfer.offsetWidth; els.golfer.classList.add("go");
+        els.ball.classList.remove("hop"); void els.ball.offsetWidth; els.ball.classList.add("hop");
+        els.currentNum.classList.remove("pop"); void els.currentNum.offsetWidth; els.currentNum.classList.add("pop");
+        if (current === hole.target) {
+          holeDone = true;
+          results.push({ par: hole.par, strokes });
+          render();
+          showSunk();
+          sndSink();
+          return;
+        }
+        render();
+      }
+
+      function showSunk() {
+        const hole = holes[holeIdx];
+        const diff = strokes - hole.par;
+        els.sunkVerdict.textContent = scoreName(diff) + (diff < 0 ? "" : "");
+        els.sunkDetail.innerHTML =
+          "Sunk <b>" + hole.target + "</b> in <b>" + strokes + "</b> stroke" + (strokes === 1 ? "" : "s") +
+          " on a par <b>" + hole.par + "</b> — running total <b>" + fmtDiff(totalDiff()) + "</b>.";
+        els.nextBtn.textContent = holeIdx === holes.length - 1 ? "See scorecard" : "Next hole";
+        els.sunkPanel.classList.remove("hidden");
+        els.playArea.classList.add("hidden");
+      }
+
+      function loadHole(i) {
+        holeIdx = i;
+        const hole = holes[i];
+        current = hole.start;
+        strokes = 0;
+        moves = [];
+        history = [hole.start];
+        holeDone = false;
+        els.sunkPanel.classList.add("hidden");
+        els.playArea.classList.remove("hidden");
+        render();
+      }
+
+      function showCard() {
+        els.gameScreen.classList.add("hidden");
+        els.cardScreen.classList.remove("hidden");
+        const td = totalDiff();
+        els.totalScore.textContent = fmtDiff(td);
+        els.totalName.textContent =
+          td <= -5 ? "Tour pro stuff" :
+          td < 0 ? "Under par — sharp shooting" :
+          td === 0 ? "Even par — steady round" :
+          td <= 5 ? "A respectable round" : "The course wins this one";
+        els.cardTitle.textContent = mode === "daily" ? "Daily course complete" : "Round complete";
+        const totalPar = results.reduce((s, r) => s + r.par, 0);
+        const totalStrokes = results.reduce((s, r) => s + r.strokes, 0);
+        let sub = (mode === "daily" ? "Daily course · " + dateLabel() + " · " : "") +
+          results.length + " holes in the books. Total par " + totalPar +
+          ", you took " + totalStrokes + " strokes.";
+        if (mode === "daily" && dailyRec) {
+          sub += " Streak: " + dailyRec.streak + (dailyRec.streak === 1 ? " day" : " days") +
+            " — a fresh course drops at midnight.";
+        }
+        els.cardSub.textContent = sub;
+        let rows = "";
+        results.forEach((r, i) => {
+          const d = r.strokes - r.par;
+          const cls = d < 0 ? "diff-neg" : d > 0 ? "diff-pos" : "";
+          rows += "<tr><td>Hole " + (i + 1) + "</td><td>" + r.par + "</td><td>" + r.strokes +
+            '</td><td class="' + cls + '">' + fmtDiff(d) + "</td></tr>";
+          if (results.length > 9 && (i === 8 || i === results.length - 1)) {
+            const seg = results.slice(i === 8 ? 0 : 9, i + 1);
+            const sd = seg.reduce((s, x) => s + (x.strokes - x.par), 0);
+            const scls = sd < 0 ? "diff-neg" : sd > 0 ? "diff-pos" : "";
+            rows += '<tr class="subtotal"><td>' + (i === 8 ? "Front 9" : "Back 9") + "</td><td>" +
+              seg.reduce((s, x) => s + x.par, 0) + "</td><td>" + seg.reduce((s, x) => s + x.strokes, 0) +
+              '</td><td class="' + scls + '">' + fmtDiff(sd) + "</td></tr>";
+          }
+        });
+        els.cardBody.innerHTML = rows;
+        els.againBtn.textContent = mode === "daily" ? "Play a casual 9 holes" : "Play another round";
+        window.scrollTo({ top: 0 });
+      }
+
+      function startRound(count) {
+        holes = [];
+        for (let i = 0; i < count; i++) holes.push(genHole(i));
+        results = [];
+        els.cardScreen.classList.add("hidden");
+        els.gameScreen.classList.remove("hidden");
+        els.dailyDonePanel.classList.add("hidden");
+        loadHole(0);
+      }
+
+      /* ================= Daily course ================= */
+      const DAILY_KEY = "numberGolfDaily";
+      function dayKey(offset) {
+        const d = new Date();
+        d.setDate(d.getDate() + (offset || 0));
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      }
+      function dateLabel() {
+        return new Date().toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      }
+      function loadDaily() {
+        try { return JSON.parse(localStorage.getItem(DAILY_KEY)) || null; }
+        catch (e) { return null; }
+      }
+      function recordDaily() {
+        const prev = loadDaily();
+        let streak = 1;
+        if (prev && prev.date === dayKey(-1)) streak = (prev.streak || 0) + 1;
+        else if (prev && prev.date === dayKey(0)) streak = prev.streak || 1;
+        const rec = {
+          date: dayKey(0), streak,
+          diff: totalDiff(),
+          strokes: results.reduce((s, r) => s + r.strokes, 0),
+          par: results.reduce((s, r) => s + r.par, 0)
+        };
+        try { localStorage.setItem(DAILY_KEY, JSON.stringify(rec)); }
+        catch (e) { /* storage unavailable — the streak just won't persist */ }
+        return rec;
+      }
+      function dailyStreakNow() {
+        const rec = loadDaily();
+        if (!rec) return 0;
+        if (rec.date === dayKey(0) || rec.date === dayKey(-1)) return rec.streak || 0;
+        return 0;
+      }
+      function showDailyDone(rec) {
+        els.cardScreen.classList.add("hidden");
+        els.gameScreen.classList.remove("hidden");
+        els.playArea.classList.add("hidden");
+        els.sunkPanel.classList.add("hidden");
+        els.trail.innerHTML = '<span class="empty">Today\'s daily course is already in the books.</span>';
+        els.dailyDoneDetail.innerHTML =
+          "You shot <b>" + fmtDiff(rec.diff) + "</b> — <b>" + rec.strokes + "</b> strokes on a par <b>" + rec.par +
+          "</b> course. Streak: <b>" + rec.streak + (rec.streak === 1 ? " day" : " days") +
+          "</b>. One scored shot at it per day — a fresh course drops at midnight.";
+        els.dailyDonePanel.classList.remove("hidden");
+      }
+      function updateModeBar() {
+        els.mode9.classList.toggle("active", mode === "9");
+        els.mode18.classList.toggle("active", mode === "18");
+        els.modeDaily.classList.toggle("active", mode === "daily");
+        const played = loadDaily();
+        const doneToday = !!(played && played.date === dayKey(0));
+        const streak = dailyStreakNow();
+        els.dailySub.textContent = dateLabel() +
+          (doneToday ? " · played" : "") +
+          (streak > 0 && !doneToday ? " · streak " + streak : "");
+      }
+      function setMode(m) {
+        mode = m;
+        dailyRec = null;
+        updateModeBar();
+        if (m === "daily") {
+          const played = loadDaily();
+          if (played && played.date === dayKey(0)) {
+            showDailyDone(played);
+            window.scrollTo({ top: 0 });
+            return;
+          }
+          rand = mulberry32(hashStr("number-golf-daily-" + dayKey(0)));
+          startRound(9);
+          rand = Math.random;
+        } else {
+          rand = Math.random;
+          startRound(m === "18" ? 18 : 9);
+        }
+        window.scrollTo({ top: 0 });
+      }
+
+      /* ================= Controls ================= */
+      els.undoBtn.addEventListener("click", () => {
+        if (!moves.length || holeDone) return;
+        moves.pop(); history.pop();
+        current = history[history.length - 1];
+        strokes--;
+        sndUndo();
+        render();
+      });
+      els.resetBtn.addEventListener("click", () => {
+        if (holeDone) return;
+        const hole = holes[holeIdx];
+        current = hole.start; strokes = 0; moves = []; history = [hole.start];
+        sndUndo();
+        render();
+      });
+      els.hintBtn.addEventListener("click", () => {
+        const hole = holes[holeIdx];
+        const path = solve(current, hole.target, hole.ops, 9);
+        if (!path || !path.length) return;
+        const want = path[0].label;
+        const btn = els.clubs.querySelector('[data-label="' + want + '"]');
+        if (btn) {
+          btn.classList.remove("hint-flash"); void btn.offsetWidth; btn.classList.add("hint-flash");
+          btn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+        beep(880, 0.1, "sine", 0.06);
+      });
+      els.nextBtn.addEventListener("click", () => {
+        if (holeIdx === holes.length - 1) {
+          if (mode === "daily") { dailyRec = recordDaily(); updateModeBar(); }
+          showCard();
+        }
+        else loadHole(holeIdx + 1);
+      });
+      els.againBtn.addEventListener("click", () => setMode(mode === "daily" ? "9" : mode));
+      els.mode9.addEventListener("click", () => setMode("9"));
+      els.mode18.addEventListener("click", () => setMode("18"));
+      els.modeDaily.addEventListener("click", () => setMode("daily"));
+      els.dailyCasualBtn.addEventListener("click", () => setMode("9"));
+      els.soundBtn.addEventListener("click", () => {
+        soundOn = !soundOn;
+        els.soundOnIcon.classList.toggle("hidden", !soundOn);
+        els.soundOffIcon.classList.toggle("hidden", soundOn);
+        if (soundOn) sndSwing();
+      });
+
+      /* ================= Ad slot (demo creatives — no network ads on a static page) ================= */
+      const AD_CREATIVES = [
+        {
+          brand: "Fairway Fries",
+          line: "2-for-1 at the turn — hot, salty, legendary.",
+          cta: "Menu",
+          tagline: "The snack shack at the turn. 2-for-1 fries all round long.",
+          logoBg: "linear-gradient(145deg, #ffd23e, #ff8a3d)",
+          logo: '<svg viewBox="0 0 24 24" fill="none" stroke="#7a2d00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10V4M12 10V3M17 10V4"/><path d="M4 10h16l-1.6 9.2a2 2 0 0 1-2 1.8H7.6a2 2 0 0 1-2-1.8L4 10Z" fill="#e11d63" stroke="#7a2d00"/></svg>',
+          menu: [["Classic Fairway Fries", "$4"], ["Loaded Birdie Fries", "$7"], ["Bogey Burger Basket", "$9"], ["Arnold Palmer Slush", "$3"]],
+          orderLabel: "Order by phone",
+          orderHref: "tel:+15550137742"
+        },
+        {
+          brand: "Mulligan Insurance",
+          line: "One bad hole shouldn't ruin your round.",
+          cta: "Plans",
+          tagline: "Mulligan Insurance — because everybody deserves one do-over.",
+          logoBg: "linear-gradient(145deg, #2ee6ff, #7c3aed)",
+          logo: '<svg viewBox="0 0 24 24" fill="none" stroke="#0b0f2b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a8 8 0 0 1 8 8H4a8 8 0 0 1 8-8Z" fill="#eef0ff" stroke="#0b0f2b"/><path d="M12 11v7a2.5 2.5 0 0 0 5 0"/></svg>',
+          menu: [["Single Mulligan", "$2"], ["Round Saver — 3 mulligans", "$5"], ["Season Pass", "$19"], ["Pro Shop Bundle", "$29"]],
+          orderLabel: "Get a quote",
+          orderHref: "tel:+15550143380"
+        }
+      ];
+      const adEls = {
+        slot: $("adSlot"), main: $("adMain"), close: $("adClose"),
+        logo: $("adLogo"), brand: $("adBrand"), line: $("adLine"), cta: $("adCta"),
+        note: $("adHiddenNote"),
+        overlay: $("adOverlay"), cardClose: $("adCardClose"),
+        cardTitle: $("adCardTitle"), cardTagline: $("adCardTagline"),
+        menu: $("adMenu"), order: $("adOrder")
+      };
+      let adIdx = Math.floor(Math.random() * AD_CREATIVES.length);
+      let adDismissed = false;
+      let adTimer = null;
+
+      function fillAd(c) {
+        adEls.logo.style.background = c.logoBg;
+        adEls.logo.innerHTML = c.logo;
+        adEls.brand.textContent = c.brand;
+        adEls.line.textContent = c.line;
+        adEls.cta.textContent = c.cta;
+        adEls.main.setAttribute("aria-label", "Advertisement: " + c.brand + " — " + c.line + " Tap for details.");
+        adEls.cardTitle.textContent = c.brand;
+        adEls.cardTagline.textContent = c.tagline;
+        adEls.menu.innerHTML = c.menu.map(m =>
+          "<li><span>" + m[0] + '</span><span class="price">' + m[1] + "</span></li>").join("");
+        adEls.order.textContent = c.orderLabel;
+        adEls.order.setAttribute("href", c.orderHref);
+      }
+      fillAd(AD_CREATIVES[adIdx]);
+
+      function rotateAd() {
+        if (adDismissed) return;
+        adEls.main.classList.add("fading");
+        setTimeout(() => {
+          adIdx = (adIdx + 1) % AD_CREATIVES.length;
+          fillAd(AD_CREATIVES[adIdx]);
+          adEls.main.classList.remove("fading");
+        }, 320);
+      }
+      adTimer = setInterval(rotateAd, 45000);
+
+      adEls.main.addEventListener("click", () => {
+        adEls.overlay.classList.remove("hidden");
+      });
+      function closeAdCard() { adEls.overlay.classList.add("hidden"); }
+      adEls.cardClose.addEventListener("click", closeAdCard);
+      adEls.overlay.addEventListener("click", e => { if (e.target === adEls.overlay) closeAdCard(); });
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAdCard(); });
+
+      adEls.close.addEventListener("click", () => {
+        if (adDismissed) return;
+        adDismissed = true;
+        clearInterval(adTimer);
+        let n = 3;
+        adEls.close.disabled = true;
+        adEls.close.textContent = n;
+        const tick = setInterval(() => {
+          n--;
+          if (n <= 0) {
+            clearInterval(tick);
+            adEls.main.classList.add("hidden");
+            adEls.close.classList.add("hidden");
+            adEls.slot.querySelector(".ad-badge").classList.add("hidden");
+            adEls.note.classList.remove("hidden");
+          } else {
+            adEls.close.textContent = n;
+          }
+        }, 1000);
+      });
+
+      setMode("9");
+    </script>
+  </body>
+</html>
